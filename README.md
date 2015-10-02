@@ -1,1 +1,8 @@
-# Customcontrol
+# Customcontrol.
+This project contains basic information about how to create a custom control...
+Tech.....
+how to create a custom control 
+use of extension method in C#....
+creating textbox,ddl,radio,check.
+jquery object prototype.
+extend a custom function
