@@ -1,0 +1,263 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using System.Web;
+using System.Web.Mvc;
+using System.Web.Mvc.Html;
+
+namespace MyCustomControls.Models
+{
+    public static class Control
+    {
+        public static MvcHtmlString Boo(this HtmlHelper helper, MyTextbox textbox, MyDropdownList dropdown,MyRadio radio,MyCheckBox check)
+        {
+            
+            string str = "<table id='tblNew' data-role='CustomTable' class='table table-bordered table-condensed table-hover' >";
+            str += "<thead><tr class='text-center'><th>Text</th><th>Drop</th></tr></thead>";
+            str += "<tbody>";
+            str += "<tr>";
+           // str += "<td class='text-center'>1</td>";
+
+            List<object> lstO = new List<object>();
+            lstO.Add(textbox);
+            lstO.Add(dropdown);
+
+            
+
+            
+
+            if (textbox != null)
+            {
+                str += "<td>";
+                str += renderTextBox(helper,textbox);
+                str += "</td>";
+            }
+            if (dropdown != null)
+            {
+                str += "<td>";
+                str += renderDropDown(helper,dropdown);
+                str += "</td>";
+            }
+            if (radio != null)
+            {
+                
+                for (int i = 0; i < radio.strValue.Length; i++)
+                {
+                    str += "<td>";
+                    str += renderRadio(helper, radio.name,radio.strValue[i],radio.IsChecked[i],radio.htmlAttributes);
+                    str += "</td>";
+                }
+                
+            }
+            if (check != null)
+            {
+
+                for (int i = 0; i < check.strValue.Length; i++)
+                {
+                    str += "<td>";
+                    str += renderCheckBox(helper, check.name, check.strValue[i], check.IsChecked[i], check.htmlAttributes);
+                    str += "</td>";
+                }
+
+            }
+
+            str += "<td class='text-center'><button type='button' class='btnPlus'>+</button></td>";
+            str += "</tr>";
+            str += "</tbody>";
+            str += "</table>";
+
+
+            return MvcHtmlString.Create(str);
+        }
+
+        //public static MvcHtmlString Boo(this HtmlHelper helper, List<string[]> target)
+        //{
+        //    string str = "<table style='border:solid 1px'>";
+        //    str += "<thead><tr><th>Text</th><th>Drop</th></tr></thead>";
+        //    str += "<tbody>";
+        //    str += "<tr>";
+
+        //    foreach (var item in target)
+        //    {
+        //        str += "<td>";
+        //        if (item[0] == "TextBox")
+        //        {
+        //            str += renderTextBox(helper);
+        //        }
+        //        else if (item[0] == "DropDown")
+        //        {
+        //            str += renderDropDown(helper);
+        //        }
+        //        str += "</td>";
+        //    }
+
+        //    return MvcHtmlString.Create(str);
+
+        //}
+        public static MvcHtmlString renderTextBox(this HtmlHelper helper, MyTextbox textBox)
+        {
+            return helper.TextBox(textBox.name, textBox.value, textBox.htmlAttributes);
+            //return InputExtensions.TextBox(helper, "textBox");
+        }
+
+        public static MvcHtmlString renderDropDown(this HtmlHelper helper, MyDropdownList DropDownList)
+        {
+            List<SelectListItem> lst = new List<SelectListItem>()
+            {
+                new SelectListItem{Text="Tamizh",Value="Tamizh",Selected=true},
+                new SelectListItem{Text="Other",Value="Other"}
+            };
+            return helper.DropDownList(DropDownList.name, DropDownList.selectList, DropDownList.optionLabel, DropDownList.htmlAttributes);
+            // return SelectExtensions.DropDownList(helper, "Drop", (IEnumerable<SelectListItem>)lst, "--Select--");
+        }
+        public static MvcHtmlString renderRadio(this HtmlHelper helper,string name,object value,bool isChecked,object htmlAttributes){
+            return helper.RadioButton(name, value, isChecked, htmlAttributes);
+        }
+        public static MvcHtmlString renderCheckBox(this HtmlHelper helper, string name, object value, bool isChecked, object htmlAttributes)
+        {
+            htmlAttributes=new{@value=value};
+            return helper.CheckBox(name, isChecked, htmlAttributes);
+        }
+
+    }
+
+    public class MyRadio
+    {
+        public string labelText { get; set; }
+        public string name { get; set; }
+        public string[] strValue { get; set; }
+        public bool[] IsChecked { get; set; }
+        public object htmlAttributes { get; set; }
+
+        public MyRadio(string labelText,string name,string[] strValue)
+        {
+            this.labelText = labelText;
+            this.name=name;
+            this.strValue = strValue;
+        }
+        public MyRadio(string labelText, string name, string[] strValue,bool[] IsChecked)
+        {
+            this.labelText = labelText;
+            this.name=name;
+            this.strValue = strValue;
+            this.IsChecked = IsChecked;
+        }
+
+        public MyRadio(string labelText, string name, string[] strValue, bool[] IsChecked, object htmlAttributes)
+        {
+            this.labelText = labelText;
+            this.name = name;
+            this.strValue = strValue;
+            this.IsChecked = IsChecked;
+            this.htmlAttributes = htmlAttributes; 
+        }
+    }
+
+    public class MyCheckBox
+    {
+        public string labelText { get; set; }
+        public string name { get; set; }
+        public string[] strValue { get; set; }
+        public bool[] IsChecked { get; set; }
+        public object htmlAttributes { get; set; }
+
+        public MyCheckBox(string labelText, string name, string[] strValue)
+        {
+            this.labelText = labelText;
+            this.name = name;
+            this.strValue = strValue;
+        }
+        public MyCheckBox(string labelText, string name, string[] strValue, bool[] IsChecked)
+        {
+            this.labelText = labelText;
+            this.name = name;
+            this.strValue = strValue;
+            this.IsChecked = IsChecked;
+        }
+
+        public MyCheckBox(string labelText, string name, string[] strValue, bool[] IsChecked, object htmlAttributes)
+        {
+            this.labelText = labelText;
+            this.name = name;
+            this.strValue = strValue;
+            this.IsChecked = IsChecked;
+            this.htmlAttributes = htmlAttributes;
+        }
+    }
+
+    public class MyTextbox
+    {
+        public string labelText { get; set; }
+        public string name { get; set; }
+
+        public string value { get; set; }
+
+        public object htmlAttributes { get; set; }
+
+        public MyTextbox(string labelText, string name)
+        {
+            this.labelText = labelText;
+            this.name = name;
+        }
+        public MyTextbox(string labelText, string name, string value)
+        {
+            this.labelText = labelText;
+            this.name = name;
+            this.value = value;
+        }
+        public MyTextbox(string labelText, string name, string value, object htmlAttributes)
+        {
+            this.labelText = labelText;
+            this.name = name;
+            this.value = value;
+            this.htmlAttributes = htmlAttributes;
+        }
+    }
+
+    public class MyDropdownList
+    {
+        public string labelText { get; set; }
+        public string name { get; set; }
+
+        public IEnumerable<SelectListItem> selectList { get; set; }
+
+        public string optionLabel { get; set; }
+
+        public object htmlAttributes { get; set; }
+
+        public MvcHtmlString HtmlText { get; set; }
+
+
+        public MyDropdownList(string labelText,string name, IEnumerable<SelectListItem> selectList)
+        {
+            this.labelText = labelText;
+            this.name = name;
+            this.selectList = selectList;
+        }
+        public MyDropdownList(string labelText, string name, IEnumerable<SelectListItem> selectList, string optionLabel)
+        {
+            this.labelText = labelText;
+            this.name = name;
+            this.selectList = selectList;
+            this.optionLabel = optionLabel;
+        }
+        public MyDropdownList(string labelText, string name, IEnumerable<SelectListItem> selectList, object htmlAttributes)
+        {
+            this.labelText = labelText;
+            this.name = name;
+            this.selectList = selectList;
+            this.htmlAttributes = htmlAttributes;
+        }
+        public MyDropdownList(string labelText, string name, IEnumerable<SelectListItem> selectList, string optionLabel, object htmlAttributes)
+        {
+            this.labelText = labelText;
+            this.name = name;
+            this.selectList = selectList;
+            this.optionLabel = optionLabel;
+            this.htmlAttributes = htmlAttributes;
+        }
+    }
+}
+
+
