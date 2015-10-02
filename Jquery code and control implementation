@@ -1,0 +1,183 @@
+@model MyCustomControls.Models.RegisterModel
+@{
+    ViewBag.Title = "Register";
+    List<SelectListItem> lst = new List<SelectListItem>()
+            {
+                new SelectListItem{Text="Tamizh",Value="Tamizh",Selected=true},
+                new SelectListItem{Text="Other",Value="Other"}
+            };
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script src="~/Scripts/jquery-1.8.2.min.js"></script>
+<hgroup class="title">
+    <h1>@ViewBag.Title.</h1>
+    <h2>Create a new account.</h2>
+</hgroup>
+
+@using (Html.BeginForm()) {
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary()
+    <input type="button" id="btnGet" value="get" class="btn btn-info"/>
+    <fieldset>
+        <legend>Registration Form</legend>
+        <ol>
+            <li>
+                @Html.Boo(new MyTextbox("NAME","TESTTEXT","Boo")
+                ,new MyDropdownList("LANGUAGES","Drop",lst,"--Select--")
+                ,new MyRadio("radio","radBtn",new string[3]{"YES","NO","YES/NO"},new bool[3]{true,true,false})
+                ,new MyCheckBox("checkkk","checkkBoox",new string[3]{"Boo","bala","suresh"},new bool[3]{true,false,true})
+                 )
+
+
+                
+                
+                @Html.LabelFor(m => m.UserName)
+                @Html.TextBox("UserName")
+            </li>
+            <li>
+               @Html.CheckBox("chchc", true, new {@value="Boobalan" })
+                @Html.LabelFor(m => m.Password)
+                @Html.PasswordFor(m => m.Password)
+            </li>
+            <li>
+                @Html.LabelFor(m => m.ConfirmPassword)
+                @Html.PasswordFor(m => m.ConfirmPassword)
+            </li>
+        </ol>
+        <input type="submit" value="Register" />
+    </fieldset>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
+<script>
+
+
+   
+
+    $(document).ready(function () {
+
+        (function ($) {
+
+
+
+            $.fn.setValue = function (data) {
+                debugger;
+
+                $("#tblNew tr:gt(1)").remove();
+
+
+                $(data).each(function (i, val) {
+                    
+
+                    if (i > 0) {
+                        $('.btnPlus').click();
+                    }
+
+                    var newRow = $("#tblNew tr:eq(" + (parseInt(i)+1) + ")");
+
+                    var keyys = Object.keys(val);
+                    $(keyys).each(function (j, key) {
+                        debugger;
+                        var idVal = i == 0 ? "" : (parseInt(i) + 1);
+                        var bln=Boolean(typeof(val[key]) === "object");
+                        if (bln) {
+                            $(val[key]).each(function (k, ele) {
+                                debugger;
+                                
+                                newRow.find("input[value='" + ele + "']").prop('checked', true);
+                            });
+                        }
+                        else {
+                            newRow.find("#" + key).val(val[key]);
+                        }
+                    });
+
+                   
+                });
+
+
+            };
+
+        }(jQuery));
+        
+        
+
+        $('.btnPlus').on('click', function () {
+            debugger;
+            var trEle = $(this).parent().parent();
+            var sno = parseInt($('tr', $(this).parentsUntil('table')).length) + 1;
+            var tbodyEle = $('tr:last', $(this).parentsUntil('table'))
+
+            var cloneEle = $(this).parent().parent().clone();
+            $('input[type=text],textarea,select', cloneEle).val("");
+            $('input[type=radio],input[type=checkbox]', cloneEle).prop('checked', false);
+            $('input[type=checkbox]', cloneEle).each(function () {
+                var name=$(this).attr('name');
+                $(this).attr('name', name + sno);
+                
+            });
+            $('input[type=radio]', cloneEle).each(function () {
+                var name = $(this).attr('name');
+                $(this).attr('name', name + sno);
+                
+            });
+          //  $('td:first', cloneEle).text(sno);
+            $('button', cloneEle).text("-");
+            $('button', cloneEle).removeClass('btnPlus').addClass('btnMinus');
+            tbodyEle.after(cloneEle);
+        });
+
+        $('table').on('mousedown', 'td>.btnMinus', function () {
+            var trEle = $(this).parent().parent();
+            //var txt = $('td:first', trEle).text();
+
+            //$('tr:gt(' + txt + ')').each(function (idx, v) {
+            //    var t = parseInt(txt) + parseInt(idx);
+            //    $('td:first', this).text(t);
+
+            //    $('input[type=checkbox]', this).each(function () {
+            //        debugger;
+            //        var name = $(this).attr('name');
+            //        $(this).attr('name', name +  t);
+            //    });
+            //    $('input[type=radio]', this).each(function () {
+            //        var name = $(this).attr('name');
+            //        $(this).attr('name', name + t);
+            //    });
+            //});
+
+
+
+            trEle.remove();
+
+        });
+
+        $("#btnGet").click(function () {
+            var url = '@Url.Content("~/")' + 'Account/Get';
+            $.get(url, "", function (data) {
+                debugger;
+                $('#tblNew').data('role', 'CustomTable').setValue(data);
+                $().setValue();
+
+            },'json')
+        });
+
+        //$('.btnPlus').click(function () {
+        //    debugger;
+        //    var trEle = $(this).parent().parent();
+        //    var sno =parseInt( $('tr', $(this).parentsUntil('table')).length)+1;
+        //    var tbodyEle = $('tr:last', $(this).parentsUntil('table'))
+
+        //    var cloneEle = $(this).parent().parent().clone();
+        //    $('td:first', cloneEle).text(sno);
+        //    $('button', cloneEle).text("-");
+        //    tbodyEle.after(cloneEle);
+            
+        //});
+    });
+
+</script>
