@@ -12,7 +12,7 @@ namespace MyCustomControls.Models
     {
         public static MvcHtmlString Boo(this HtmlHelper helper, MyTextbox textbox, MyDropdownList dropdown,MyRadio radio,MyCheckBox check)
         {
-            
+            //aaaa
             string str = "<table id='tblNew' data-role='CustomTable' class='table table-bordered table-condensed table-hover' >";
             str += "<thead><tr class='text-center'><th>Text</th><th>Drop</th></tr></thead>";
             str += "<tbody>";
